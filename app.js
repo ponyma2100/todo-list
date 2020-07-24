@@ -1,5 +1,6 @@
 const express = require('express')
 const mongoose = require('mongoose') // 載入mongoose
+const exphbs = require('express-handlebars')
 const app = express()
 const port = 3000
 
@@ -18,9 +19,13 @@ db.on('error', () => {
 db.once('open', () => {
   console.log('mongodb connected!')
 })
+// 新增了一個叫 hbs 的樣板引擎
+app.engine('hbs', exphbs({ defaultLayout: 'main', extname: '.hbs' }))
+// hbs元件掛載到我們的主程式裡，開始啟用
+app.set('view engine', 'hbs')
 
 app.get('/', (req, res) => {
-  res.send('Hello World!')
+  res.render('index')
 })
 
 app.listen(port, () => {
