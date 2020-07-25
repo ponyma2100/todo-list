@@ -3,6 +3,7 @@ const mongoose = require('mongoose') // 載入mongoose
 const exphbs = require('express-handlebars')
 const bodyParser = require('body-parser') // 引用body-parser
 const Todo = require('./models/todo') //載入 Todo Model
+const todo = require('./models/todo')
 const app = express()
 const port = 3000
 
@@ -73,6 +74,14 @@ app.post('/todos/:id/edit', (req, res) => {
     })
     .then(() => res.redirect(`/todos/${id}`))
     .catch(error => console.log(error))
+})
+
+app.post('/todos/:id/delete', (req, res) => {
+  const id = req.params.id
+  return Todo.findById(id)
+    .then(todo => todo.remove())
+    .then(() => res.redirect('/'))
+    .catch(error => console.error(error))
 })
 
 app.listen(port, () => {
