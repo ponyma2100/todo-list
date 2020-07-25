@@ -37,15 +37,22 @@ app.get('/', (req, res) => {
 
 app.post('/todos', (req, res) => {
   const name = req.body.name //從req.body 拿出表單裡的name資料
-  console.log(req.body)
+  // console.log(req.body)
   return Todo.create({ name }) //存入資料庫
     .then(() => res.redirect('/')) //新增完成後導回首頁
     .catch(error => console.log(error))
 })
 
-
 app.get('/todos/new', (req, res) => {
   return res.render('new')
+})
+
+app.get('/todos/:id', (req, res) => {
+  const id = req.params.id
+  return Todo.findById(id)
+    .lean()
+    .then((todo) => res.render('detail', { todo }))
+    .catch(error => console.log(error))
 })
 
 app.listen(port, () => {
