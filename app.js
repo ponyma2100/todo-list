@@ -55,6 +55,26 @@ app.get('/todos/:id', (req, res) => {
     .catch(error => console.log(error))
 })
 
+app.get('/todos/:id/edit', (req, res) => {
+  const id = req.params.id
+  return Todo.findById(id)
+    .lean()
+    .then((todo) => res.render('edit', { todo }))
+    .catch(error => console.log(error))
+})
+
+app.post('/todos/:id/edit', (req, res) => {
+  const id = req.params.id // 資料來自客戶端，id 要從網址上用 req.params.id 拿下來
+  const name = req.body.name // 資料來自客戶端，name從表單拿出來
+  return Todo.findById(id)
+    .then(todo => {
+      todo.name = name
+      return todo.save()
+    })
+    .then(() => res.redirect(`/todos/${id}`))
+    .catch(error => console.log(error))
+})
+
 app.listen(port, () => {
   console.log(`This Express is listening on http:localhost:${port}`)
 })
