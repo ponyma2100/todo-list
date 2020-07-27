@@ -2,6 +2,7 @@ const express = require('express')
 const mongoose = require('mongoose') // 載入mongoose
 const exphbs = require('express-handlebars')
 const bodyParser = require('body-parser') // 引用body-parser
+const methodOverride = require('method-override')
 const Todo = require('./models/todo') //載入 Todo Model
 const todo = require('./models/todo')
 const app = express()
@@ -9,10 +10,8 @@ const port = 3000
 
 // set connection to mongedb
 mongoose.connect('mongodb://localhost/todo-list', { useNewUrlParser: true, useUnifiedTopology: true })
-
 // 取得資料庫連線狀態
 const db = mongoose.connection
-
 // 連線異常
 db.on('error', () => {
   console.log('mongodb error!')
@@ -26,8 +25,8 @@ db.once('open', () => {
 app.engine('hbs', exphbs({ defaultLayout: 'main', extname: '.hbs' }))
 // hbs元件掛載到我們的主程式裡，開始啟用
 app.set('view engine', 'hbs')
-
 app.use(bodyParser.urlencoded({ extended: true }))
+app.use(methodOverride('_method'))
 
 app.get('/', (req, res) => {
   Todo.find() //取出Todo Model的所有資料
@@ -65,7 +64,7 @@ app.get('/todos/:id/edit', (req, res) => {
     .catch(error => console.log(error))
 })
 
-app.post('/todos/:id/edit', (req, res) => {
+app.put('/todos/:id', (req, res) => {
   const id = req.params.id // 資料來自客戶端，id 要從網址上用 req.params.id 拿下來
   const { name, isDone } = req.body // 資料來自客戶端，name從表單拿出來
   return Todo.findById(id)
@@ -78,7 +77,7 @@ app.post('/todos/:id/edit', (req, res) => {
     .catch(error => console.log(error))
 })
 
-app.post('/todos/:id/delete', (req, res) => {
+app.delete('/todos/:id', (req, res) => {
   const id = req.params.id
   return Todo.findById(id)
     .then(todo => todo.remove())
