@@ -66,10 +66,11 @@ app.get('/todos/:id/edit', (req, res) => {
 
 app.post('/todos/:id/edit', (req, res) => {
   const id = req.params.id // 資料來自客戶端，id 要從網址上用 req.params.id 拿下來
-  const name = req.body.name // 資料來自客戶端，name從表單拿出來
+  const { name, isDone } = req.body // 資料來自客戶端，name從表單拿出來
   return Todo.findById(id)
     .then(todo => {
       todo.name = name
+      todo.isDone = isDone === 'on'
       return todo.save()
     })
     .then(() => res.redirect(`/todos/${id}`))
