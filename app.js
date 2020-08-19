@@ -1,6 +1,7 @@
 const express = require('express')
 const exphbs = require('express-handlebars')
 const session = require('express-session')
+const usePassport = require('./config/passport')
 const bodyParser = require('body-parser') // 引用body-parser
 const methodOverride = require('method-override')
 
@@ -9,8 +10,10 @@ require('./config/mongoose')
 const app = express()
 
 const todo = require('./models/todo')
+const { use } = require('passport')
 const port = 3000
-
+// 呼叫 Passport 函式並傳入 app
+usePassport(app)
 // 新增了一個叫 hbs 的樣板引擎
 app.engine('hbs', exphbs({ defaultLayout: 'main', extname: '.hbs' }))
 // hbs元件掛載到我們的主程式裡，開始啟用
