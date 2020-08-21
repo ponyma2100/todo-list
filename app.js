@@ -4,6 +4,7 @@ const session = require('express-session')
 const usePassport = require('./config/passport')
 const bodyParser = require('body-parser') // 引用body-parser
 const methodOverride = require('method-override')
+const flash = require('connect-flash')
 const app = express()
 
 const routes = require('./routes') //引用路由器
@@ -28,10 +29,14 @@ app.use(methodOverride('_method'))
 
 usePassport(app) // 呼叫 Passport 函式並傳入 app，這條要寫在路由之前
 
+app.use(flash())
+
 app.use((req, res, next) => {
   console.log(req.user)
   res.locals.isAuthenticated = req.isAuthenticated
   res.locals.user = req.user
+  res.locals.success_msg = req.flash('success_msg')
+  res.locals.warning_msg = req.flash('warning_msg')
   next()
 })
 //把使用者資料交接給 res 使用， 要交接給 res，我們才能在前端樣板裡使用這些資訊
