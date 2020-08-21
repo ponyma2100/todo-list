@@ -1,7 +1,7 @@
 const mongoose = require('mongoose') // 載入mongoose
 
 // set connection to mongedb
-mongoose.connect('mongodb://localhost/todo-list', { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect('mongodb://localhost/todo-list', { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true })
 // 取得資料庫連線狀態
 const db = mongoose.connection
 // 連線異常

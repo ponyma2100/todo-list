@@ -12,6 +12,12 @@ const todoSchema = new Schema({
     type: Boolean,
     default: false,  // 預設完成狀態為 false
   },
+  userId: {
+    type: Schema.Types.ObjectId, //定義 userId 這個項目是一個 ObjectId，也就是它會連向另一個資料物件
+    ref: 'User', //定義參考對象是 User model
+    index: true,
+    required: true
+  }
 })
 // 輸出schema，這份 schema 命名為 Todo
 module.exports = mongoose.model('Todo', todoSchema)
